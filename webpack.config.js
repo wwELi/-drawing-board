@@ -20,6 +20,10 @@ module.exports = function() {
             use: {
               loader: 'ts-loader',
             }
+          },
+          {
+            test: /\.(svg|png)$/,
+            use: 'raw-loader'
           }
         ]
       },

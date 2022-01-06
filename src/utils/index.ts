@@ -2,7 +2,7 @@ export function setClassName(el: HTMLElement, className: string| string []): voi
 
     const classes = Array.isArray(className) ? className : [className]
 
-    el.className = `${el.className} ${classes.join(' ')}`;
+    el.className = `${el.className} ${classes.join(' ')}`.trim();
 }
 
 export function getOffsetPosition(el: HTMLElement, left = 0, top = 0): [number, number] {
@@ -15,4 +15,8 @@ export function getOffsetPosition(el: HTMLElement, left = 0, top = 0): [number, 
 
     return [l, t];
 
-} 
+}
+
+export function isFunction(fn: any): boolean {
+    return typeof fn === 'function';
+}

@@ -5,10 +5,10 @@ import { BrushCanvas } from './brush';
 export class Container extends PNode {
 
     @Children(ToolBar)
-    toolBor?: ToolBar;
+    toolBor!: ToolBar;
 
     @Children(BrushCanvas)
-    brushCanvas?: BrushCanvas;
+    brushCanvas!: BrushCanvas;
 
     @Classes()
     background = {
@@ -22,7 +22,9 @@ export class Container extends PNode {
         this.hostView = template;
     }
 
-    mounted() {
-        console.log(this.toolBor);
+    public mounted() {
+        this.toolBor.onBrushColorChange((color: string) => {
+            this.brushCanvas.setBrushColor(color);
+        })
     }
 }

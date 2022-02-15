@@ -7,9 +7,7 @@ export function render(el: HTMLElement) {
     jss.setup(preset());
     setGlobalStyle();
 
-    new Container(el).render();
+    const container = new Container(el);
+    container.render();
+    container.mounted();
 }
-
-
-
-

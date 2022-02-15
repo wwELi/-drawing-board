@@ -16,7 +16,7 @@ export abstract class PNode {
     protected parent!: PNode;
 
     protected mounted () {
-        console.log(this.hostView);
+        // console.log(this.hostView);
     }
 
     private getHostView() {

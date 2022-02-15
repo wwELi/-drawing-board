@@ -1,13 +1,6 @@
 import { Brush } from './../core/brush';
 import { PNode } from '../core/node';
-// @ts-ignore
-import xx from '../assets/download.svg';
 
-console.log(xx);
-
-// class DownloadButton extends PNode {
-
-// }
 
 export class BrushCanvas extends PNode {
     template = 'canvas';
@@ -21,5 +14,9 @@ export class BrushCanvas extends PNode {
         el.height = parent.offsetHeight;
 
         this.brush = new Brush(el);
+    }
+
+    public setBrushColor(color: string) {
+        this.brush.setBrushColor(color);
     }
 }

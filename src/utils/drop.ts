@@ -9,6 +9,7 @@ export class Drop {
 
     private moveHandler: Handelr[] = [];
     private startHandler: Handelr[] = [];
+    private upHandler: Function[] = [];
 
     constructor(private el: HTMLElement) {
 
@@ -42,6 +43,9 @@ export class Drop {
     }
 
     private mouseup() {
+        if (this.isMove) {
+            this.upHandler.forEach((cb) => cb());
+        }
         this.isMove = false;
     }
 
@@ -52,6 +56,11 @@ export class Drop {
 
     public start(cb: Handelr): Drop {
         this.startHandler.push(cb);
+        return this;
+    }
+
+    public up(cb: Handelr): Drop {
+        this.upHandler.push(cb);
         return this;
     }
 }

@@ -45,8 +45,12 @@ export class Brush {
         this.ctx.lineWidth = 10;
 
         drop
-        .start(([x, y]) => this.moveTo(x, y))
-        .move(([x, y]) => this.line(x, y));
+        .start(([x, y]) => {
+            this.ctx.beginPath();
+            this.moveTo(x, y);
+        })
+        .move(([x, y]) => this.line(x, y))
+        .up(() => this.ctx.closePath())
     }
 
     private moveTo(x: number, y: number) {
@@ -57,6 +61,10 @@ export class Brush {
         this.ctx.lineCap = 'square';
         this.ctx.lineTo(x, y);
         this.ctx.stroke();
+    }
+
+    public setBrushColor(color: string) {
+        this.ctx.strokeStyle = color;
     }
 
     public toImage() {

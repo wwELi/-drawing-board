@@ -67,21 +67,21 @@ export class Brush {
         this.ctx.strokeStyle = color;
     }
 
-    public toImage() {
-        // const canvas = genBackgroundImage(this.canvas);
+    public toImageBlob(): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            this.canvas.toBlob((blob) => {
+                if (!blob) {
+                    reject();
+                    return;
+                }
+                resolve(blob);
+            }, 'image/png');
+    
+        })
+    }
 
-        // document.body.appendChild(canvas)
-
-        // // console.log(backgroundSize);
-
-        // this.canvas.toBlob(async (blob) => {
-        //     if (!blob) {
-        //         return;
-        //     }
-        //     const url = URL.createObjectURL(blob);
-        //     // await downloadFile('drawing.png', url);
-        //     URL.revokeObjectURL(url);
-        // }, 'image/png');
+    public setBrushSize(size: number) {
+        this.ctx.lineWidth = size;
     }
 
 }

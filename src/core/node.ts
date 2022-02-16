@@ -6,6 +6,7 @@ type NodeConstr = new () => PNode;
 
 const childKey = Symbol('childKey');
 const classesKey = Symbol('classesKey');
+const eleTargetReg = /^<[^]+>$/; 
 
 export abstract class PNode {
 
@@ -30,7 +31,13 @@ export abstract class PNode {
         }
 
         if (typeof this.template === 'string') {
-            this.hostView = hostEl = document.createElement(this.template);
+
+            if (eleTargetReg.test(this.template)) {
+                const documentEl = new DOMParser().parseFromString(this.template, 'text/html');
+                hostEl = this.hostView = ((documentEl.firstElementChild as Element).querySelector('body') as HTMLBodyElement).firstElementChild as HTMLElement;
+            } else {
+                this.hostView = hostEl = document.createElement(this.template);
+            }
         }
 
         this.attchClasses();
@@ -61,6 +68,7 @@ export abstract class PNode {
         children.forEach(({ key, comp }) => {
             const child = this[key] = new comp();
             const childEl = child.render();
+
             child.parent = this;
             hostEl.appendChild(childEl);
 
@@ -81,8 +89,9 @@ export abstract class PNode {
         const classesMap = classList.reduce((prev, key) => {
             return Object.assign(prev, { [key]: this[key] });
         }, {});
-        const { classes } = jss.createStyleSheet(classesMap).attach();
-        setClassName((this.hostView as HTMLElement), Object.values(classes));
+        const sheet = jss.createStyleSheet(classesMap, { link: true }).attach();
+        setClassName((this.hostView as HTMLElement), Object.values(sheet.classes));
+        sheet.update({});
     }
 }
 

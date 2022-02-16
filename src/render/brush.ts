@@ -1,5 +1,6 @@
 import { Brush } from './../core/brush';
 import { PNode } from '../core/node';
+import { downloadFile } from '../utils/download';
 
 
 export class BrushCanvas extends PNode {
@@ -18,5 +19,16 @@ export class BrushCanvas extends PNode {
 
     public setBrushColor(color: string) {
         this.brush.setBrushColor(color);
+    }
+
+    public async downloadImage() {
+        const blob = await this.brush.toImageBlob();
+        const url = URL.createObjectURL(blob);
+        await downloadFile(`${Date.now()}.png`, url);
+        URL.revokeObjectURL(url);
+    }
+
+    public setBrushSize(size: number) {
+        this.brush.setBrushSize(size);
     }
 }

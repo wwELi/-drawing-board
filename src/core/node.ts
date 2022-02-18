@@ -1,5 +1,5 @@
 import jss from 'jss'
-import { setClassName, isFunction } from '../utils/index';
+import { setClassName, isFunction, removeClassName } from '../utils/index';
 
 
 type NodeConstr = new () => PNode;
@@ -79,18 +79,33 @@ export abstract class PNode {
     }
 
     private attchClasses() {
-
+        let sheet;
         const classList: string[] = this[classesKey] || [];
+        const hostView = this.hostView as HTMLElement;
 
         if (classList.length === 0) {
             return;
         }
 
         const classesMap = classList.reduce((prev, key) => {
+            this[key] = new Proxy(this[key], {
+                set(target, p, val) {
+                    // nedd add patch handler
+                    jss.removeStyleSheet(sheet);
+                    removeClassName(hostView, Object.values(sheet.classes));
+
+                    Promise.resolve().then(() => {
+                        sheet = jss.createStyleSheet(classesMap, { link: true }).attach();
+                        setClassName(hostView, Object.values(sheet.classes));
+                    })
+                    return Reflect.set(target, p, val);
+                }
+            });
             return Object.assign(prev, { [key]: this[key] });
         }, {});
-        const sheet = jss.createStyleSheet(classesMap, { link: true }).attach();
-        setClassName((this.hostView as HTMLElement), Object.values(sheet.classes));
+
+        sheet = jss.createStyleSheet(classesMap, { link: true }).attach();
+        setClassName(hostView, Object.values(sheet.classes));
         sheet.update({});
     }
 }

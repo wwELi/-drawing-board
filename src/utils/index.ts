@@ -5,6 +5,13 @@ export function setClassName(el: HTMLElement, className: string| string []): voi
     el.className = `${el.className} ${classes.join(' ')}`.trim();
 }
 
+export function removeClassName(el: HTMLElement, className: string | string[]) {
+    const classes = Array.isArray(className) ? className : [className];
+    classes.forEach((name) => {
+        el.classList.remove(name);
+    })
+}
+
 export function getOffsetPosition(el: HTMLElement, left = 0, top = 0): [number, number] {
     const l = el.offsetLeft + left;
     const t = el.offsetTop + top;

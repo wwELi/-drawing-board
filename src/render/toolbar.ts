@@ -15,7 +15,6 @@ export class BrushSize extends PNode {
 
     @Click()
     onclick() {
-        console.log('--');
     }
 }
 

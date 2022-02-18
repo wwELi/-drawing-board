@@ -80,7 +80,6 @@ export class BrushSize extends PNode {
 
     mounted() {
         [this.big, this.medium, this.small].forEach((ins) => {
-            console.log(ins);
             ins.cb = (size: number) => {
                 this.handlers.forEach((cb) => cb(size))
             }

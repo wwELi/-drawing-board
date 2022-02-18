@@ -2,6 +2,7 @@ import { Drop } from '../utils/drop';
 import { useVariable } from '../render/use-variable';
 import jss from 'jss';
 import { setClassName } from '../utils';
+import { Stack } from './stack';
 
 function renderCanvasBackGround(el: HTMLCanvasElement) {
     const [border] = useVariable('1px');
@@ -31,6 +32,7 @@ function renderCanvasBackGround(el: HTMLCanvasElement) {
 
 export class Brush {
 
+    private stack = new Stack<ImageData>();
     private ctx: CanvasRenderingContext2D;
 
     constructor(
@@ -43,6 +45,7 @@ export class Brush {
         const drop = new Drop(canvas);
 
         this.ctx.lineWidth = 10;
+        this.stack.push(this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height));
 
         drop
         .start(([x, y]) => {
@@ -50,7 +53,10 @@ export class Brush {
             this.moveTo(x, y);
         })
         .move(([x, y]) => this.line(x, y))
-        .up(() => this.ctx.closePath())
+        .up(() => {
+            this.ctx.closePath();
+            this.stack.push(this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height));
+        })
     }
 
     private moveTo(x: number, y: number) {
@@ -61,6 +67,22 @@ export class Brush {
         this.ctx.lineCap = 'square';
         this.ctx.lineTo(x, y);
         this.ctx.stroke();
+    }
+
+    private putImageData(imageData: ImageData | undefined | null) {
+        if (!imageData) {
+            return;
+        }
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.putImageData(imageData, 0, 0);
+    }
+
+    public next() {
+        this.putImageData(this.stack.next());
+    }
+
+    public prev() {
+        this.putImageData(this.stack.prev());
     }
 
     public setBrushColor(color: string) {

@@ -34,6 +34,8 @@ export class Container extends PNode {
     public mounted() {
         this.toolBor.onBrushColorChange((color: string) => {
             this.brushCanvas.setBrushColor(color);
+            // this.brushCanvas
+            this.brushCanvas.brush.prev();
         });
 
         this.downloadFile.onDownloadClick(() => {

@@ -68,8 +68,21 @@ export class Brush {
     }
 
     public toImageBlob(): Promise<Blob> {
+
+        const canvas = document.createElement('canvas') as HTMLCanvasElement;
+        canvas.width = this.canvas.width;
+        canvas.height = this.canvas.height;
+
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        ctx.fillStyle = '#FFF';
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.drawImage(this.canvas, 0, 0);
+
+        document.body.appendChild(canvas);
+
         return new Promise((resolve, reject) => {
-            this.canvas.toBlob((blob) => {
+
+            canvas.toBlob((blob) => {
                 if (!blob) {
                     reject();
                     return;

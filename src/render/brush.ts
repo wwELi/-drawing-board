@@ -10,7 +10,7 @@ export class BrushCanvas extends PNode {
 
     mounted() {
         const el = this.hostView as HTMLCanvasElement;
-        const parent = this.parent.hostView;
+        const parent = this._parent.hostView;
         el.width = parent.offsetWidth;
         el.height = parent.offsetHeight;
 

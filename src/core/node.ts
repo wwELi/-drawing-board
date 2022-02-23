@@ -11,10 +11,10 @@ const eleTargetReg = /^<[^]+>$/;
 export abstract class PNode {
 
     protected abstract template: string | HTMLElement;
-    protected children: NodeConstr[]= [];
+    protected _children: PNode[]= [];
     protected classes = [];
     public hostView!: HTMLElement;
-    protected parent!: PNode;
+    protected _parent!: PNode;
 
     protected mounted () {
         // console.log(this.hostView);
@@ -64,12 +64,12 @@ export abstract class PNode {
     private renderChild() {
         const hostEl = this.hostView as HTMLElement;
         const children: { key: string, comp: NodeConstr }[] = this[childKey] || [];
-
         children.forEach(({ key, comp }) => {
             const child = this[key] = new comp();
             const childEl = child.render();
 
-            child.parent = this;
+            this._children.push(child);
+            child._parent = this;
             hostEl.appendChild(childEl);
 
             if (isFunction(child.mounted)) {

@@ -23,6 +23,7 @@
     "webpack-dev-server": "^4.6.0"
   },
   "dependencies": {
+    "drop-handler": "^1.0.3",
     "jss": "^10.8.2",
     "jss-preset-default": "^10.8.2",
     "styled-components": "^5.3.3"

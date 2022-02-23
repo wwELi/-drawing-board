@@ -1,4 +1,4 @@
-import { Drop } from '../utils/drop';
+import { Drop } from 'drop-handler';
 import { useVariable } from '../render/use-variable';
 import jss from 'jss';
 import { setClassName } from '../utils';

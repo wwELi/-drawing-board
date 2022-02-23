@@ -3,7 +3,9 @@ import { ToolBar } from './toolbar';
 import { BrushCanvas } from './brush';
 import { DownloadFile } from './download';
 import { BrushSize } from './size';
+// import { Component } from '_@types_react@17.0.37@@types/react';
 
+// @Component
 export class Container extends PNode {
 
     @Children(ToolBar)
@@ -14,7 +16,6 @@ export class Container extends PNode {
 
     @Children(DownloadFile)
     downloadFile!: DownloadFile;
-
 
     @Children(BrushSize)
     brushSize!: BrushSize;
@@ -35,7 +36,7 @@ export class Container extends PNode {
         this.toolBor.onBrushColorChange((color: string) => {
             this.brushCanvas.setBrushColor(color);
             // this.brushCanvas
-            this.brushCanvas.brush.prev();
+            // this.brushCanvas.brush.prev();
         });
 
         this.downloadFile.onDownloadClick(() => {

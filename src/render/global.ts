@@ -1,15 +1,9 @@
-import jss from 'jss'
+import { createGlobalStyle } from 'styled-components';
 
-const global = {
-    '*': {
-        margin: 0,
-        padding: 0
+export const GlobalStyle = createGlobalStyle`
+    * {
+        margin: 0;
+        padding: 0;
     }
-};
-
-export function setGlobalStyle() {
-    jss.createStyleSheet({
-        '@global': global
-    }).attach();
-}
+`;
 

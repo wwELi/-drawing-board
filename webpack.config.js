@@ -4,21 +4,22 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = function() {
 
     return {
-      entry: './src/main.ts',
+      entry: './src/main.tsx',
       output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
       },
       resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js', '.tsx'],
       },
+      devtool: 'source-map',
       module: {
         rules: [
           {
-            test: /\.ts$/,
+            test: /\.(ts|tsx)$/,
             exclude: /node_modules/,
             use: {
-              loader: 'ts-loader',
+              loader: 'babel-loader',
             }
           },
           {

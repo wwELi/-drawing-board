@@ -2,9 +2,7 @@ interface Options {
     hide: boolean
 }
 
-
 export default function addWatermark(canvas: HTMLCanvasElement, hide: boolean): HTMLCanvasElement {
-    // const copyedCanvas = document.createElement('canvas').
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const textCanvas = document.createElement('canvas') as HTMLCanvasElement;
     const textCtx = textCanvas.getContext('2d') as CanvasRenderingContext2D;
@@ -40,8 +38,6 @@ export default function addWatermark(canvas: HTMLCanvasElement, hide: boolean): 
         }
     }
 
-    // console.log(imageData, textImageData);
-
     return canvas;
 }
 
@@ -58,4 +54,6 @@ function showWatermark(canvas: HTMLCanvasElement) {
         }
 
     }
+
+    return imageData;
 }

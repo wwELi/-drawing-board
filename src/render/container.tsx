@@ -1,10 +1,11 @@
 import { ToolBar } from './toolbar';
 import { BrushCanvas } from './brush';
 import { DownloadFile } from './download';
-import { BrushSize } from './size';
+import { BrushToogle } from './brush-toogle';
 
 import React from 'react';
 import styled from 'styled-components';
+import { InsertShape } from './insert-shape';
 
 const Background = styled.main`
     position: relative;
@@ -29,7 +30,8 @@ const RightTopTools = styled.div`
 function Container() {
     return <Background>
         <RightTopTools>
-            <BrushSize></BrushSize>
+            <InsertShape></InsertShape>
+            <BrushToogle></BrushToogle>
             <DownloadFile></DownloadFile>
         </RightTopTools>
         <BrushCanvas></BrushCanvas>

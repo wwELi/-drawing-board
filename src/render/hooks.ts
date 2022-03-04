@@ -24,3 +24,27 @@ export function useBrush(): [(Brush), (brush: Brush) => void] {
 
     return [brush as Brush, subscribeSetBrush]
 }
+
+const canvasSubscribe: Dispatch<SetStateAction<HTMLCanvasElement | undefined>>[] = [];
+
+function subscribeSetCanvas(el: HTMLCanvasElement) {
+    setTimeout(() => {
+        canvasSubscribe.forEach((setFn) => setFn(el));
+    }, 0);
+}
+
+export function useBrushCanvas(): [HTMLCanvasElement, (el: HTMLCanvasElement) => void] {
+    const [canvasEl, setCanvasEL] = useState();
+
+    useEffect(() => {
+        canvasSubscribe.push(setCanvasEL);
+
+        return () => {
+            const index = canvasSubscribe.findIndex(fn => fn === setCanvasEL);
+            canvasSubscribe.splice(index, 1);
+        }
+
+    }, []);
+
+    return [canvasEl, subscribeSetCanvas]
+}

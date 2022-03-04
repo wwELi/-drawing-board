@@ -3,6 +3,7 @@ import { useVariable } from '../render/use-variable';
 import { Stack } from './stack';
 import addWatermark from '../utils/watermark';
 import { List } from '../utils/list';
+import { Shape } from './shape';
 
 function renderCanvasBackGround(el: HTMLCanvasElement) {
     const [border] = useVariable('1px');
@@ -30,8 +31,10 @@ export class Brush {
 
     private stack = new Stack<ImageData>();
     private ctx: CanvasRenderingContext2D;
-
     private movedPoints:List<{ x: number, y:number }> = new List(4);
+    private shapes: Shape[] = [];
+    private onCanvasClickHandler: ((coordinate: [number, number]) => void)[] = [];
+    public isStroke = true;
 
     constructor(
         private canvas: HTMLCanvasElement
@@ -39,22 +42,41 @@ export class Brush {
         this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
 
         this.clearAliasing();
-
         renderCanvasBackGround(canvas);
-        const drop = new Drop(canvas);
+        this.initDropHandler();
+    }
 
+    private initDropHandler() {
+        const drop = new Drop(this.canvas);
         this.stack.push(this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height));
 
         drop
+        .click(([x, y]) => {
+            this.onCanvasClickHandler.forEach(fn => fn([x, y]));
+        })
         .start(([x, y]) => {
+            if(!this.isStroke) return;
             this.ctx.beginPath();
             this.movedPoints.push({ x, y });
         })
         .move(([x, y]) => {
+            if (!this.isStroke) {
+                this.shapes
+                .filter((shape) => shape.isInShpe(x, y))
+                .forEach((shape) => {
+                    shape.clear(this.ctx);
+                    shape.updateData({ x, y });
+                    shape.draw(this.ctx);
+                })
+                // this.shapes
+                return;
+            }
+            // if(!this.isStroke) return;
             this.movedPoints.push({ x, y });
             this.line();
         })
         .up(() => {
+            if(!this.isStroke) return;
             this.ctx.closePath();
             this.movedPoints.clear();
             this.stack.push(this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height));
@@ -109,6 +131,14 @@ export class Brush {
         this.ctx.putImageData(imageData, 0, 0);
     }
 
+    public get events() {
+        return {
+            click: (cb: ((coordinate: [number, number]) => void)) => {
+                this.onCanvasClickHandler.push(cb);
+            }
+        }
+    }
+
     public next() {
         this.putImageData(this.stack.next());
     }
@@ -131,11 +161,9 @@ export class Brush {
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         ctx.drawImage(this.canvas, 0, 0);
 
-        document.body.appendChild(addWatermark(canvas, true));
-
         return new Promise((resolve, reject) => {
 
-            canvas.toBlob((blob) => {
+            addWatermark(canvas, true).toBlob((blob) => {
                 if (!blob) {
                     reject();
                     return;
@@ -148,6 +176,11 @@ export class Brush {
 
     public setBrushSize(size: number) {
         this.ctx.lineWidth = size;
+    }
+
+    public push(shape: Shape) {
+        this.shapes.push(shape);
+        shape.draw(this.ctx);
     }
 
 }

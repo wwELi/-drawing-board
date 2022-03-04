@@ -181,6 +181,7 @@ export class Brush {
     public push(shape: Shape) {
         this.shapes.push(shape);
         shape.draw(this.ctx);
+        shape.select(this.ctx);
     }
 
 }

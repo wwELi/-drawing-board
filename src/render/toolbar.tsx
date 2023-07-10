@@ -17,7 +17,7 @@ const BackgroundImage = styled.div`
     border-radius: 5px;
  `;
 
-export function ToolBar(props: React.Props<{}>) {
+export function ToolBar(props) {
     const [brush] = useBrush();
 
     function  formatColorToNumner(color: string): number[] {

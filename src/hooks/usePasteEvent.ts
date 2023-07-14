@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { Drop } from 'drop-handler';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 
+let coordinate:[number, number] = [10, 20];
 
-export function usePasteEvent(callback: (result: { type: 'text' | 'image', data: string | HTMLImageElement }) => void) {
-
-    function onPaste(evt) {
+export function usePasteEvent(callback: (result: { type: 'text' | 'image', data: string | HTMLImageElement, coordinate: [number, number] }) => void) {
+    const onPaste = (evt) => {
         if (!evt.clipboardData) {
             return;
         }
@@ -16,7 +17,7 @@ export function usePasteEvent(callback: (result: { type: 'text' | 'image', data:
         const { kind, type } = currentItem;
 
         if (kind === 'string') {
-            currentItem.getAsString((result: string) => callback({ type: 'text', data: result }));
+            currentItem.getAsString((result: string) => callback({ type: 'text', data: result, coordinate }));
         }
 
         if (kind === 'file' && type.match('image')) {
@@ -24,7 +25,7 @@ export function usePasteEvent(callback: (result: { type: 'text' | 'image', data:
             const reader = new FileReader();
             reader.onload = () => {
                 const image = new Image();
-                image.onload = () => callback({ type: 'image', data: image });
+                image.onload = () => callback({ type: 'image', data: image, coordinate });
                 image.src = reader.result as string;
             }
             reader.readAsDataURL(file);
@@ -32,7 +33,11 @@ export function usePasteEvent(callback: (result: { type: 'text' | 'image', data:
     }
 
     useEffect(() => {
-        window.addEventListener('paste', onPaste);
+        const drop = new Drop(document.body);
+        drop.click(([x, y]) => {
+            coordinate = [x, y];
+        })
+        window.addEventListener('paste', (evt) => onPaste(evt));
         return () => {
             window.removeEventListener('paste', onPaste);
         }

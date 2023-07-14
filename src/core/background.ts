@@ -43,7 +43,7 @@ function genCanvas2DContext(width: number, height: number): CanvasRenderingConte
     canvas.height = height * scale;
 
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    ctx.scale(scale, 1);
+    // ctx.scale(scale, 1);
 
     return ctx;
 }

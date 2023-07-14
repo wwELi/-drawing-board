@@ -35,6 +35,7 @@ export class Brush {
     private shapes: Shape[] = [];
     private onCanvasClickHandler: ((coordinate: [number, number]) => void)[] = [];
     public isStroke = false;
+    private offset = new Map<Shape, { x: number, y:number }>()
 
     constructor(
         private canvas: HTMLCanvasElement
@@ -60,12 +61,24 @@ export class Brush {
 
     redraw() {
         this.shapes.forEach((shape) => {
+            const offset = this.offset.get(shape) || { x: 0, y: 0 };
+            this.ctx.save();
+            this.ctx.translate(-offset.x, -offset.y);
             shape.draw(this.ctx);
+            this.ctx.restore();
         })
     }
 
-    translate(x: number, y: number) {
-        this.ctx.translate(x, y);
+    translateX = 0;
+    translateY = 0;
+    translate(x: number, y: number, cb) {
+        this.translateX = this.translateX + x;
+        this.translateY = this.translateY + y;
+        this.ctx.save();
+        this.ctx.translate(this.translateX, this.translateY);
+        cb();
+        this.ctx.restore();
+        this.ctx.fillText('test', 20, 20)
     }
 
     // TODO 移除方法
@@ -204,6 +217,7 @@ export class Brush {
     public push(shape: Shape) {
         this.shapes.push(shape);
         shape.draw(this.ctx);
+        this.offset.set(shape, { x: this.translateX, y: this.translateY });
         if (shape?.select) {
             shape?.select(this.ctx);
         }

@@ -19,8 +19,7 @@ function translate(brush: Brush) {
             return;
         }
         brush.clearCanvas();
-        brush.translate(x - lastX, y - lastY)
-        brush.redraw();
+        brush.translate(x - lastX, y - lastY, () => brush.redraw());
         lastX = x;
         lastY = y;
     }

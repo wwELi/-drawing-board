@@ -10,7 +10,7 @@ const BrushIcon = styled(Icon)`
 export function BrushToogle() {
 
     const [brush] = useBrush();
-    const [stroke, setStroke] = useState(true);
+    const [stroke, setStroke] = useState(false);
 
     function onIconClick() {
         setStroke(!stroke);

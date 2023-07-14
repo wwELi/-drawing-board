@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Icon from './icon';
 import { useBrush, useBrushCanvas } from './hooks';
 import styled from 'styled-components';
-import { Rectangle } from '../core/shape';
+import { Drop } from 'drop-handler';
+import { Rectangle } from '../core/RectangleShape';
 
 const Ul = styled.ul((props) => ({
     position: 'absolute',
@@ -37,9 +38,12 @@ export function InsertShape() {
     }
 
     useEffect(() => {
-        if (brush) {
-            brush.events.click(onCanvasClick);
+        if (!brush) {
+            return;
         }
+        const canvas = brush.getContainerCanvas();
+        const drop = new Drop(canvas);
+        drop.click(onCanvasClick);
     }, [brush]);
 
     function onShapeClick() {

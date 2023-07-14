@@ -34,7 +34,7 @@ export class Brush {
     private movedPoints:List<{ x: number, y:number }> = new List(4);
     private shapes: Shape[] = [];
     private onCanvasClickHandler: ((coordinate: [number, number]) => void)[] = [];
-    public isStroke = true;
+    public isStroke = false;
 
     constructor(
         private canvas: HTMLCanvasElement
@@ -43,9 +43,32 @@ export class Brush {
 
         this.clearAliasing();
         renderCanvasBackGround(canvas);
-        this.initDropHandler();
+        // this.initDropHandler();
     }
 
+    getShapes(): Shape[] {
+        return this.shapes;
+    }
+
+    getContainerCanvas():HTMLCanvasElement {
+        return this.canvas;
+    }
+
+    clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    redraw() {
+        this.shapes.forEach((shape) => {
+            shape.draw(this.ctx);
+        })
+    }
+
+    translate(x: number, y: number) {
+        this.ctx.translate(x, y);
+    }
+
+    // TODO 移除方法
     private initDropHandler() {
         const drop = new Drop(this.canvas);
         this.stack.push(this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height));
@@ -62,10 +85,10 @@ export class Brush {
         .move(([x, y]) => {
             if (!this.isStroke) {
                 this.shapes
-                .filter((shape) => shape.isInShpe(x, y))
+                .filter((shape) => shape?.isInShape ? shape.isInShape(x, y) : void 0)
                 .forEach((shape) => {
                     shape.clear(this.ctx);
-                    shape.updateData({ x, y });
+                    shape?.updateData ? shape.updateData({ x, y }) : void 0;
                     shape.draw(this.ctx);
                 })
                 // this.shapes
@@ -181,7 +204,9 @@ export class Brush {
     public push(shape: Shape) {
         this.shapes.push(shape);
         shape.draw(this.ctx);
-        shape.select(this.ctx);
+        if (shape?.select) {
+            shape?.select(this.ctx);
+        }
     }
 
 }

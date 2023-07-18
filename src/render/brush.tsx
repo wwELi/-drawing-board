@@ -32,13 +32,19 @@ function translate(brush: Brush) {
 }
 
 function handlerSelect(canvasEl: HTMLCanvasElement) {
-    new Drop(canvasEl).click(([x, y]) => {
+    canvasEl.addEventListener('contextmenu', (evt) => {
+        const {x, y} = evt;
         const shapes = brush.getSelectShapes(x, y);
         const shape = shapes[0];
         PopUp.close();
         if (shape) {
             PopUp.show(<Panel shape={shape} brush={brush}></Panel>, { x, y });
         }
+        evt.preventDefault();
+    });
+
+    canvasEl.addEventListener('click', () => {
+        PopUp.close();
     })
 }
 

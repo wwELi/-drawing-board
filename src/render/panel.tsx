@@ -41,7 +41,8 @@ function RectanglePanel(shape: Rectangle, brush: Brush) {
 }
 
 const mapping = {
-    Rectangle: RectanglePanel
+    Rectangle: RectanglePanel,
+    ArrowShape: RectanglePanel,
 }
 
 const Container = styled.div`
@@ -61,7 +62,7 @@ export function Panel(props: { shape: Shape, brush: Brush }) {
         return <>No Match Panel</>
     }
 
-    const render = mapping[match[1]];
+    const render = mapping[match[1]] || (() => {});
 
     return <Container>{ render(props.shape, props.brush) }</Container>
 }

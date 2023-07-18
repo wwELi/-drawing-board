@@ -8,14 +8,31 @@ import { TextShape } from '../core/textShape';
 import { Drop } from 'drop-handler';
 import { PopUp } from './popup';
 import { Panel } from './panel';
+import { Shape } from '../core/shape';
 
 let brush: Brush;
 
 function translate(brush: Brush) {
-    const drop = new Drop(brush.getContainerCanvas());
+    const containerEl = brush.getContainerCanvas();
+    let isSpacePressed = false;
+
+    document.addEventListener('keydown', (event) => {
+        if (event.code === "Space") {
+            isSpacePressed = true;
+        }
+    })
+
+    document.addEventListener('keyup', (event) => {
+        if (event.code === "Space") {
+            isSpacePressed = false;
+          }
+    })
+
+    const drop = new Drop(containerEl);
     let lastX, lastY;
 
     const onMove = ([x, y]) => {
+        if (!isSpacePressed) return;
         if (!lastX || !lastY) {
             lastX = x;
             lastY = y;
@@ -48,6 +65,33 @@ function handlerSelect(canvasEl: HTMLCanvasElement) {
     })
 }
 
+function moveSelectShape(canvasEl: HTMLCanvasElement) {
+    let selectShape: Shape | null = null;
+    let lastX, lastY;
+    new Drop(canvasEl)
+        .click(([x, y]) => {
+            const shapes = brush.getSelectShapes(x, y);
+            const shape = shapes[0];
+            selectShape = shape;
+        })
+        .move(([x, y]) => {
+            if (!selectShape || !lastX || !lastY) {
+                lastX = x;
+                lastY = y;
+                return;
+            }
+
+            selectShape.x = selectShape.x + x - lastX;
+            selectShape.y = selectShape.y + y - lastY;
+
+            brush.redraw();
+
+            lastX = x;
+            lastY = y;
+        })
+        .up(() => lastX = lastY = null);
+}
+
 export function BrushCanvas() {
     const canvasRef = useRef(null); 
     const [,setBrush] = useBrush();
@@ -78,6 +122,7 @@ export function BrushCanvas() {
         setCanvas(canvas);
         translate(brush);
         handlerSelect(canvas);
+        moveSelectShape(canvas)
     }, [])
 
     return <canvas ref={canvasRef}/>

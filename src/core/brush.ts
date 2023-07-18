@@ -220,7 +220,7 @@ export class Brush {
         this.shapes.push(shape);
         shape.draw(this.ctx);
         if (shape?.select) {
-            shape?.select(this.ctx);
+            // shape?.select(this.ctx);
         }
     }
 

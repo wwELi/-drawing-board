@@ -4,6 +4,7 @@ import { useBrush, useBrushCanvas } from './hooks';
 import styled from 'styled-components';
 import { Drop } from 'drop-handler';
 import { Rectangle } from '../core/RectangleShape';
+import { ArrowShape } from '../core/ArrowShape';
 
 const Ul = styled.ul((props) => ({
     position: 'absolute',
@@ -28,11 +29,16 @@ const Container = styled.span({
 export function InsertShape() {
     const [brush] = useBrush();
     const [canvas] = useBrushCanvas();
-    const insert = useMemo(() => ({ status: false, canvas }), []);
+    const insert = useMemo(() => ({ status: false, canvas, shape: '' }), []);
 
     function onCanvasClick([x, y]) {
         if (!insert.status) return;
-        brush.push(new Rectangle(x, y));
+        const mapping = {
+            Arrow: () => brush.push(new ArrowShape(x, y)),
+            Rect: () => brush.push(new Rectangle(x, y))
+        }
+
+        mapping[insert.shape]();
         insert.status = false;
         insert.canvas.style.cursor = 'auto';
     }
@@ -46,16 +52,18 @@ export function InsertShape() {
         drop.click(onCanvasClick);
     }, [brush]);
 
-    function onShapeClick() {
+    function onShapeClick(type) {
         insert.status = true;
         insert.canvas = canvas;
+        insert.shape = type;
         canvas.style.cursor = 'cell';
     }
 
     return <Container>
         <Icon name="insert"></Icon>
         <Ul>
-            <li onClick={onShapeClick}>正方形</li>
+            <li onClick={() => onShapeClick('Rect')}>正方形</li>
+            <li onClick={() => onShapeClick('Arrow')}>箭头</li>
         </Ul>
     </Container>
 }

@@ -1,6 +1,7 @@
-import { Shape } from './shape';
+import { Shape, tag } from './shape';
+@tag()
 export class ImageShape implements Shape {
-    constructor(private x:number, private y:number, private image: HTMLImageElement) {
+    constructor(public x:number, public y:number, private image: HTMLImageElement) {
     }
 
     draw(ctx: CanvasRenderingContext2D): void {

@@ -1,18 +1,20 @@
-import { Shape } from "./shape";
+import { Shape, tag } from "./shape";
 
+@tag()
 export class Rectangle implements Shape {
 
-    offset = [0, 0];
+    color = '#1990ff';
+    width = 200;
+    height = 200;
 
-    constructor(private x:number, private y:number) {
+    constructor(public x:number, public y:number) {
 
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         ctx.save();
-        // const [ offsetX, offsetY ]= this.offset;
-        ctx.fillStyle = 'rgb(24, 144, 255)';
-        ctx.fillRect(this.x, this.y, 200, 200);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.restore();
     }
 
@@ -38,21 +40,17 @@ export class Rectangle implements Shape {
         })
     }
 
-    updateData({ x, y }) {
-        this.x = x;
-        this.y = y;
+    updateData({ x = this.x, y = this.y, color = this.color, width = this.width, height = this.height }) {
+        Object.assign(this, { x, y, color, width, height })
     }
 
     isInShape(x, y) {
-        const isIn = (this.x < x && x < this.x + 200) && (this.y < y && y < this.y + 200);
-        if (isIn) {
-            this.offset = [x - this.x, y - this.y];
-        }
+        const isIn = (this.x < x && x < this.x + this.width) && (this.y < y && y < this.y + this.height);
         return isIn;
     }
 
     clear(ctx: CanvasRenderingContext2D) {
-        ctx.clearRect(this.x, this.y, 200, 200);
+        ctx.clearRect(this.x, this.y, this.width, this.height);
     }
 }
 

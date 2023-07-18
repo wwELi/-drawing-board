@@ -1,10 +1,13 @@
 import { Brush } from '../core/brush';
 import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useBrush, useBrushCanvas } from './hooks';
 import { usePasteEvent } from '../hooks/usePasteEvent';
 import { ImageShape } from '../core/imageShape';
 import { TextShape } from '../core/textShape';
 import { Drop } from 'drop-handler';
+import { PopUp } from './popup';
+import { Panel } from './panel';
 
 let brush: Brush;
 
@@ -18,8 +21,7 @@ function translate(brush: Brush) {
             lastY = y;
             return;
         }
-        brush.clearCanvas();
-        brush.translate(x - lastX, y - lastY, () => brush.redraw());
+        brush.translate(x - lastX, y - lastY);
         lastX = x;
         lastY = y;
     }
@@ -29,11 +31,21 @@ function translate(brush: Brush) {
     .up(() => lastX = lastY = null);
 }
 
+function handlerSelect(canvasEl: HTMLCanvasElement) {
+    new Drop(canvasEl).click(([x, y]) => {
+        const shapes = brush.getSelectShapes(x, y);
+        const shape = shapes[0];
+        PopUp.close();
+        if (shape) {
+            PopUp.show(<Panel shape={shape} brush={brush}></Panel>, { x, y });
+        }
+    })
+}
+
 export function BrushCanvas() {
     const canvasRef = useRef(null); 
     const [,setBrush] = useBrush();
     const [, setCanvas] = useBrushCanvas();
-
 
     usePasteEvent(({ type, data, coordinate }) => {
         const handler = {
@@ -58,7 +70,8 @@ export function BrushCanvas() {
 
         setBrush(brush);
         setCanvas(canvas);
-        translate(brush)
+        translate(brush);
+        handlerSelect(canvas);
     }, [])
 
     return <canvas ref={canvasRef}/>

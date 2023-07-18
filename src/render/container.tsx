@@ -6,6 +6,7 @@ import { BrushToogle } from './brush-toogle';
 import React from 'react';
 import styled from 'styled-components';
 import { InsertShape } from './insert-shape';
+import { PopUp } from './popup';
 
 const Background = styled.main`
     position: relative;
@@ -36,6 +37,7 @@ function Container() {
         </RightTopTools>
         <BrushCanvas></BrushCanvas>
         <ToolBar></ToolBar>
+        <PopUp/>
     </Background>
 }
 

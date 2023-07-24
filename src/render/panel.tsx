@@ -4,7 +4,7 @@ import { Brush } from '../core/brush';
 import { Rectangle } from '../core/RectangleShape';
 import { Shape } from '../core/shape';
 
-function RectanglePanel(shape: Rectangle, brush: Brush) {
+function BasePanel(shape: Rectangle, brush: Brush) {
     const [color, setColor] = useState(shape.color);
     const [width, setWidth] = useState(shape.width);
     const [height, setHeight] = useState(shape.height);
@@ -42,8 +42,8 @@ function RectanglePanel(shape: Rectangle, brush: Brush) {
 }
 
 const mapping = {
-    Rectangle: RectanglePanel,
-    ArrowShape: RectanglePanel,
+    Rectangle: BasePanel,
+    ArrowShape: BasePanel,
 }
 
 const Container = styled.div`

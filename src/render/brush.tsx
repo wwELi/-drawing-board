@@ -115,6 +115,16 @@ function moveSelectShape(canvasEl: HTMLCanvasElement) {
         .up(() => lastX = lastY = null);
 }
 
+function onRenderSelectedShape(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    canvas.addEventListener('click', (evt) => {
+        const {x, y} = evt;
+        brush.redraw();
+        const shapes = brush.getSelectShapes(x, y);
+        shapes.forEach((shape) => shape.select(ctx));
+    })
+}
+
 export function BrushCanvas() {
     const canvasRef = useRef(null); 
     const [,setBrush] = useBrush();
@@ -146,6 +156,7 @@ export function BrushCanvas() {
         translate(brush);
         handlerSelect(canvas);
         moveSelectShape(canvas);
+        onRenderSelectedShape(canvas)
         renderCanvasBackGround(canvas);
     }, [])
 

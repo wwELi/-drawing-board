@@ -13,4 +13,7 @@ export class ImageShape implements Shape {
     isInShape(x: number, y: number): boolean {
         return true;
     }
+    select(ctx: CanvasRenderingContext2D): void {
+        //
+    }
 }

@@ -110,6 +110,7 @@ export class Brush {
         this.takeSnapshot();
         this.shapes.push(shape);
         shape.draw(this.ctx);
+        shape.select(this.ctx);
     }
 
 }

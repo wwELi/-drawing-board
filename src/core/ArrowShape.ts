@@ -1,10 +1,10 @@
-import { Shape, tag } from "./shape";
+import { SelectPointWidth, Shape, tag } from "./shape";
 
 @tag()
 export class ArrowShape implements Shape {
-    width = 20;
+    width = 10;
     height = 100;
-    arrowWidth = 6;
+    arrowWidth = 4;
     arrowHeight = 10;
     ctx: CanvasRenderingContext2D | undefined;
     color = '#333'
@@ -46,6 +46,23 @@ export class ArrowShape implements Shape {
 
     updateData({ x = this.x, y = this.y, color = this.color, width = this.width, height = this.height }) {
         Object.assign(this, { x, y, color, width, height })
+    }
+
+    select(ctx: CanvasRenderingContext2D): void {
+        const { x, y, width, height, arrowHeight} = this;
+        const startPointX = x + width / 2 - SelectPointWidth / 2;
+        const startPointY = y - SelectPointWidth / 2;
+        const endPointX = x + width / 2 - SelectPointWidth / 2;
+        const endPointY = y + height + arrowHeight - SelectPointWidth / 2;
+
+        ctx.save();
+        ctx.fillStyle = '#FFF';
+        ctx.strokeStyle = '#333';
+        ctx.strokeRect(startPointX, startPointY, SelectPointWidth, SelectPointWidth);
+        ctx.fillRect(startPointX, startPointY, SelectPointWidth, SelectPointWidth);
+        ctx.strokeRect(endPointX, endPointY, SelectPointWidth, SelectPointWidth);
+        ctx.fillRect(endPointX, endPointY, SelectPointWidth, SelectPointWidth);
+        ctx.restore();
     }
 
 }

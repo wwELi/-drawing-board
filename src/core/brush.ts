@@ -4,7 +4,8 @@ import { Stack } from './stack';
 import addWatermark from '../utils/watermark';
 import { List } from '../utils/list';
 import { Shape } from './shape';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import clone from 'lodash/clone';
 
 export class Brush {
 
@@ -56,20 +57,18 @@ export class Brush {
         this.ctx.restore();
     }
 
-    private putImageData(imageData: ImageData | undefined | null) {
-        if (!imageData) {
-            return;
-        }
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.putImageData(imageData, 0, 0);
-    }
-
     public next() {
-        // this.putImageData(this.stack.next());
+        const shapes = this.stack.next();
+        if (!shapes) return;
+        this.shapes = shapes;
+        this.redraw();
     }
 
     public prev() {
-        // this.putImageData(this.stack.prev());
+        const shapes = this.stack.prev();
+        if (!shapes) return;
+        this.shapes = shapes;
+        this.redraw();
     }
 
     public setBrushColor(color: string) {
@@ -99,20 +98,21 @@ export class Brush {
         })
     }
 
+    takeSnapshot() {
+        this.stack.push(cloneDeep(this.shapes));
+    }
+
     public setBrushSize(size: number) {
         this.ctx.lineWidth = size;
     }
 
     public push(shape: Shape) {
+        this.takeSnapshot();
         this.shapes.push(shape);
         shape.draw(this.ctx);
-        if (shape?.select) {
-            // shape?.select(this.ctx);
-        }
     }
 
 }
-
 
 // class Line {
 //     private initDropHandler() {

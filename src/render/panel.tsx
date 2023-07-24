@@ -11,6 +11,7 @@ function RectanglePanel(shape: Rectangle, brush: Brush) {
 
     function onchange(evt: BaseSyntheticEvent) {
         setColor(evt.target.value);
+        brush.takeSnapshot();
     }
 
     function onWidthChange(evt: BaseSyntheticEvent) {

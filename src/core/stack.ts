@@ -34,6 +34,6 @@ export class Stack<T> {
             return;
         }
         this.pointer--;
-        return this.stackList[this.pointer].data;
+        return this.stackList[this.pointer]?.data;
     }
 }

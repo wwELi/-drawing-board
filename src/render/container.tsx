@@ -7,6 +7,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { InsertShape } from './insert-shape';
 import { PopUp } from './popup';
+import { RedoUndo } from './redoUndo';
 
 const Background = styled.main`
     position: relative;
@@ -31,6 +32,7 @@ const RightTopTools = styled.div`
 function Container() {
     return <Background>
         <RightTopTools>
+            <RedoUndo></RedoUndo>
             <InsertShape></InsertShape>
             <BrushToogle></BrushToogle>
             <DownloadFile></DownloadFile>

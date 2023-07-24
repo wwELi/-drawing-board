@@ -1,5 +1,5 @@
 import { Shape, tag } from './shape';
-@tag()
+@tag('ImageShape')
 export class ImageShape implements Shape {
     constructor(public x:number, public y:number, private image: HTMLImageElement) {
     }

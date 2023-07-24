@@ -8,9 +8,9 @@ export interface Shape{
     updateData?(data: any): void;
 }
 
-export function tag() {
+export function tag(name) {
     return function(target) {
-        Object.defineProperty(target.prototype, Symbol.toStringTag, { value: target.name });
+        Object.defineProperty(target.prototype, Symbol.toStringTag, { value: name });
     }
 }
 

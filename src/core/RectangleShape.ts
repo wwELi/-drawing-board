@@ -1,6 +1,6 @@
 import { Shape, tag } from "./shape";
 
-@tag()
+@tag('Rectangle')
 export class Rectangle implements Shape {
 
     color = '#1990ff';

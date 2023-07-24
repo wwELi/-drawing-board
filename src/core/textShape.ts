@@ -1,5 +1,5 @@
 import { Shape, tag } from './shape';
-@tag()
+@tag('TextShape')
 export class TextShape implements Shape {
     constructor(public x:number, public y:number, private text: string ) {}
 

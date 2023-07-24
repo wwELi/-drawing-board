@@ -1,6 +1,6 @@
 import { SelectPointWidth, Shape, tag } from "./shape";
 
-@tag()
+@tag('ArrowShape')
 export class ArrowShape implements Shape {
     width = 10;
     height = 100;

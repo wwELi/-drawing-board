@@ -9,8 +9,31 @@ import { Drop } from 'drop-handler';
 import { PopUp } from './popup';
 import { Panel } from './panel';
 import { Shape } from '../core/shape';
+import { useVariable } from './use-variable';
 
 let brush: Brush;
+
+function renderCanvasBackGround(el: HTMLCanvasElement) {
+    const [border] = useVariable('1px');
+    const [size] = useVariable('28px');
+    const [color] = useVariable('#f5d7ee');
+
+    function genLinearGradient(deg: number): string {
+        return `linear-gradient(${deg}deg, transparent var(${size}), var(${color}) var(${size}))`
+    }
+
+    const style = {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        background: [genLinearGradient(180), genLinearGradient(90)].join(','),
+        backgroundSize: `calc(var(${size}) + var(${border})) calc(var(${size}) + var(${border}))`,
+    }
+
+    Object.keys(style).forEach((key) => {
+        el.style[key] = style[key];
+    });
+}
 
 function translate(brush: Brush) {
     const containerEl = brush.getContainerCanvas();
@@ -122,7 +145,8 @@ export function BrushCanvas() {
         setCanvas(canvas);
         translate(brush);
         handlerSelect(canvas);
-        moveSelectShape(canvas)
+        moveSelectShape(canvas);
+        renderCanvasBackGround(canvas);
     }, [])
 
     return <canvas ref={canvasRef}/>

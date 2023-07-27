@@ -7,6 +7,7 @@ export class Rectangle implements Shape {
     color = '#1990ff';
     width = 200;
     height = 200;
+    text = '';
 
     constructor(public x:number, public y:number) {
 
@@ -47,5 +48,11 @@ export class Rectangle implements Shape {
 
     clear(ctx: CanvasRenderingContext2D) {
         ctx.clearRect(this.x, this.y, this.width, this.height);
+    }
+
+    fillText(text: string, ctx: CanvasRenderingContext2D): void {
+        this.text = text;
+        ctx.font = "bold 24px serif";
+        ctx.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2)
     }
 }

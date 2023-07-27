@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { Brush } from "../../core/brush";
 import { useContextmenu } from "../../hooks/useContextmenu";
 import { PopUp } from "../popup";
@@ -9,6 +9,7 @@ import { ImageShape } from '../../core/imageShape';
 import { TextShape } from '../../core/textShape';
 import { Shape } from "../../core/shape";
 import { Drop } from "drop-handler";
+import { Input } from "./input";
 
 export function onContextmenu(brush: Brush | null) {
     const canvas = brush?.getContainerCanvas();
@@ -78,6 +79,7 @@ export function drawSelectedShape(brush: Brush | null) {
         const canvas = brush.getContainerCanvas();
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         canvas.addEventListener('click', (evt) => {
+            PopUp.close();
             const {x, y} = evt;
             brush.redraw();
             const shapes = brush.getSelectShapes(x, y);
@@ -86,7 +88,29 @@ export function drawSelectedShape(brush: Brush | null) {
         })
 
     }, [brush])
-
-    
 }
 
+export function dbClickInputText(brush: Brush | null) {
+
+    function dblclick(evt) {
+        const { x, y } = evt;
+        const shape = brush?.getSelectShapes(x, y)[0];
+        if (!shape) return;
+        const canvas = brush.getContainerCanvas();
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        if (typeof shape.fillText === 'function') {
+            PopUp.show(<Input shape={shape} ctx={ctx}/>, { x, y })
+        }
+    }
+
+    useEffect(() => {
+        if (!brush) return;
+        const canvas = brush.getContainerCanvas();
+        canvas.addEventListener('dblclick', dblclick);
+
+        return () => canvas.removeEventListener('dblclick', dblclick);
+
+    }, [brush]);
+
+}

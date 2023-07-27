@@ -41,6 +41,9 @@ export class Brush {
         this.shapes.forEach((shape) => {
             this.ctx.save();
             shape.draw(this.ctx);
+            if (shape.text && shape.fillText) {
+                shape.fillText(shape.text, this.ctx);
+            }
             this.ctx.restore();
         })
     }

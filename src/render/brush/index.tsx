@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useBrush } from '../hooks';
 import { useVariable } from '../use-variable';
-import { drawSelectedShape, moveSelectedShape, onContextmenu, onPasteCanvas, onPressSpaceDropMove } from './hooks';
+import { dbClickInputText, drawSelectedShape, moveSelectedShape, onContextmenu, onPasteCanvas, onPressSpaceDropMove } from './hooks';
 
 function renderCanvasBackGround(el: HTMLCanvasElement) {
     const [border] = useVariable('1px');
@@ -39,6 +39,8 @@ export function BrushCanvas() {
     moveSelectedShape(brush);
     // 绘制选择点击选中的图形
     drawSelectedShape(brush);
+    // 双击图形输入文字
+    dbClickInputText(brush);
 
     useEffect(() => {
         const canvas = canvasRef.current as unknown as HTMLCanvasElement;

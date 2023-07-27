@@ -1,7 +1,7 @@
 import { Shape, tag } from './shape';
 @tag('TextShape')
 export class TextShape implements Shape {
-    constructor(public x:number, public y:number, private text: string ) {}
+    constructor(public x:number, public y:number, public text: string ) {}
 
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.fillText(this.text, this.x, this.y)

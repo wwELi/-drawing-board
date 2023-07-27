@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Brush } from "../../core/brush";
 import { useContextmenu } from "../../hooks/useContextmenu";
 import { PopUp } from "../popup";
-import { Panel } from '../panel';
+import { Panel } from '../panel/index';
 import { useSpaceMove } from "../../hooks/useSpaceMove";
 import { usePasteEvent } from "../../hooks/usePasteEvent";
 import { ImageShape } from '../../core/imageShape';

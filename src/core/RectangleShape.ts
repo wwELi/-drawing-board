@@ -1,3 +1,4 @@
+import { drawSelectRect } from "../utils/drowSelectRect";
 import { Shape, tag } from "./shape";
 
 @tag('Rectangle')
@@ -19,25 +20,20 @@ export class Rectangle implements Shape {
     }
 
     select(ctx: CanvasRenderingContext2D) {
-        const points = getPoints([this.x, this.y], 200, 200);
-        const pointWidth = 8;
+        const { x, y, width, height } = this;
 
-        points.forEach(([x, y]) => {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.beginPath();
-            ctx.strokeStyle = '#333';
-            ctx.fillStyle = '#fff';
-            ctx.lineWidth = 1;
-            const sPoints = getPoints([-(pointWidth / 2), -(pointWidth / 2)], pointWidth, pointWidth);
-            sPoints.forEach((point: [number, number], index) => {
-                index === 0 ?  ctx.moveTo(...point) : ctx.lineTo(...point);
-            });
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
-            ctx.restore();
-        })
+        const points = [
+            { x, y },
+            { x: x + width / 2, y },
+            { x: x + width, y },
+            { x: x + width, y: y + height / 2 },
+            { x: x + width, y: y + height },
+            { x: x + width / 2, y: y + height },
+            { x, y: y + height },
+            { x, y: y + height / 2 }
+        ]
+
+        drawSelectRect(points, ctx);
     }
 
     updateData({ x = this.x, y = this.y, color = this.color, width = this.width, height = this.height }) {
@@ -52,22 +48,4 @@ export class Rectangle implements Shape {
     clear(ctx: CanvasRenderingContext2D) {
         ctx.clearRect(this.x, this.y, this.width, this.height);
     }
-}
-
-function getPoints(start: [number, number], width: number, height: number): [number, number][] {
-    const [sx, sy] = start; 
-    const w = width / 2;
-    const h = height / 2;
-    const points: [number, number][] = [
-        [sx, sy],
-        [sx + w, sy],
-        [sx + width, sy],
-        [sx + width, sy + h],
-        [sx + width, sy + height],
-        [sx + w, sy + height],
-        [sx, sy + height],
-        [sx, sy + w],
-    ]
-
-    return points;
 }

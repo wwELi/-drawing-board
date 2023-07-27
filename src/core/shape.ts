@@ -4,7 +4,7 @@ export interface Shape{
     draw(ctx: CanvasRenderingContext2D): void;
     select(ctx: CanvasRenderingContext2D): void;
     clear(ctx: CanvasRenderingContext2D): void;
-    isInShape(x: number, y:number): boolean;
+    isInShape(x: number, y:number, ctx: CanvasRenderingContext2D): boolean;
     updateData?(data: any): void;
 }
 
@@ -13,5 +13,3 @@ export function tag(name) {
         Object.defineProperty(target.prototype, Symbol.toStringTag, { value: name });
     }
 }
-
-export const SelectPointWidth = 8;

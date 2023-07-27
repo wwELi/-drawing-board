@@ -121,7 +121,13 @@ function onRenderSelectedShape(canvas: HTMLCanvasElement) {
         const {x, y} = evt;
         brush.redraw();
         const shapes = brush.getSelectShapes(x, y);
+        console.log('===>', shapes)
         shapes.forEach((shape) => shape.select(ctx));
+    })
+}
+
+function useDblclickEditShapeText() {
+    useEffect(() => {
     })
 }
 
@@ -132,14 +138,9 @@ export function BrushCanvas() {
 
     usePasteEvent(({ type, data, coordinate }) => {
         const handler = {
-            text: () => {
-                brush.push(new TextShape(...coordinate, data as string));
-            },
-            image: () => {
-                brush.push(new ImageShape(...coordinate, data as HTMLImageElement))
-            }
+            text: () => brush.push(new TextShape(...coordinate, data as string)),
+            image: () => brush.push(new ImageShape(...coordinate, data as HTMLImageElement))
         }
-
         handler[type]?.();
     });
 

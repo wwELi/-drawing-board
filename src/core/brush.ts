@@ -25,7 +25,7 @@ export class Brush {
     }
 
     getSelectShapes(x: number, y: number) {
-        return this.shapes.filter(shape => shape.isInShape(x, y));
+        return this.shapes.filter(shape => shape.isInShape(x, y, this.ctx));
     }
 
     getContainerCanvas():HTMLCanvasElement {

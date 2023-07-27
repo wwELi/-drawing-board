@@ -1,4 +1,5 @@
-import { SelectPointWidth, Shape, tag } from "./shape";
+import { drawSelectRect } from "../utils/drowSelectRect";
+import { Shape, tag } from "./shape";
 
 @tag('ArrowShape')
 export class ArrowShape implements Shape {
@@ -49,20 +50,11 @@ export class ArrowShape implements Shape {
     }
 
     select(ctx: CanvasRenderingContext2D): void {
-        const { x, y, width, height, arrowHeight} = this;
-        const startPointX = x + width / 2 - SelectPointWidth / 2;
-        const startPointY = y - SelectPointWidth / 2;
-        const endPointX = x + width / 2 - SelectPointWidth / 2;
-        const endPointY = y + height + arrowHeight - SelectPointWidth / 2;
-
-        ctx.save();
-        ctx.fillStyle = '#FFF';
-        ctx.strokeStyle = '#333';
-        ctx.strokeRect(startPointX, startPointY, SelectPointWidth, SelectPointWidth);
-        ctx.fillRect(startPointX, startPointY, SelectPointWidth, SelectPointWidth);
-        ctx.strokeRect(endPointX, endPointY, SelectPointWidth, SelectPointWidth);
-        ctx.fillRect(endPointX, endPointY, SelectPointWidth, SelectPointWidth);
-        ctx.restore();
+        const points = [
+            { x: this.x + this.width / 2, y: this.y },
+            { x: this.x + this.width / 2, y: this.y + this.height + this.arrowHeight }
+        ];
+        drawSelectRect(points, ctx);
     }
 
 }

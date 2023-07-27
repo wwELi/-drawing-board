@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Drop } from 'drop-handler';
 import { Rectangle } from '../core/RectangleShape';
 import { ArrowShape } from '../core/ArrowShape';
+import { CircleShape } from '../core/CircleShape';
 
 const Ul = styled.ul((props) => ({
     position: 'absolute',
@@ -31,11 +32,15 @@ export function InsertShape() {
     const [canvas] = useBrushCanvas();
     const insert = useMemo(() => ({ status: false, canvas, shape: '' }), []);
 
-    function onCanvasClick([x, y]) {
+    function onCanvasClick(evt: MouseEvent) {
         if (!insert.status) return;
+        const {x, y} = evt;
+        evt.stopPropagation();
+        evt.preventDefault();
         const mapping = {
             Arrow: () => brush.push(new ArrowShape(x, y)),
-            Rect: () => brush.push(new Rectangle(x, y))
+            Rect: () => brush.push(new Rectangle(x, y)),
+            Circle: () => brush.push(new CircleShape(x, y))
         }
 
         mapping[insert.shape]();
@@ -48,8 +53,10 @@ export function InsertShape() {
             return;
         }
         const canvas = brush.getContainerCanvas();
-        const drop = new Drop(canvas);
-        drop.click(onCanvasClick);
+        canvas.addEventListener('click', onCanvasClick);
+        return () => {
+            canvas.removeEventListener('click', onCanvasClick);
+        }
     }, [brush]);
 
     function onShapeClick(type) {
@@ -64,6 +71,7 @@ export function InsertShape() {
         <Ul>
             <li onClick={() => onShapeClick('Rect')}>正方形</li>
             <li onClick={() => onShapeClick('Arrow')}>箭头</li>
+            <li onClick={() => onShapeClick('Circle')}>圆</li>
         </Ul>
     </Container>
 }

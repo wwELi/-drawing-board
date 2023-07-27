@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Icon from './icon';
-import { useBrush, useBrushCanvas } from './hooks';
+import { useBrush } from './hooks';
 import styled from 'styled-components';
 import { Drop } from 'drop-handler';
 import { Rectangle } from '../core/RectangleShape';
 import { ArrowShape } from '../core/ArrowShape';
 import { CircleShape } from '../core/CircleShape';
+import { Brush } from '../core/brush';
 
 const Ul = styled.ul((props) => ({
     position: 'absolute',
@@ -28,15 +29,15 @@ const Container = styled.span({
 })
 
 export function InsertShape() {
-    const [brush] = useBrush();
-    const [canvas] = useBrushCanvas();
-    const insert = useMemo(() => ({ status: false, canvas, shape: '' }), []);
+    const brush = useBrush() as Brush;
+    const insert = useMemo(() => ({ status: false, canvas: brush?.getContainerCanvas(), shape: '' }), []);
 
     function onCanvasClick(evt: MouseEvent) {
-        if (!insert.status) return;
+        if (!insert.status || !brush) return;
         const {x, y} = evt;
         evt.stopPropagation();
         evt.preventDefault();
+
         const mapping = {
             Arrow: () => brush.push(new ArrowShape(x, y)),
             Rect: () => brush.push(new Rectangle(x, y)),
@@ -61,9 +62,9 @@ export function InsertShape() {
 
     function onShapeClick(type) {
         insert.status = true;
-        insert.canvas = canvas;
+        insert.canvas = brush.getContainerCanvas();
         insert.shape = type;
-        canvas.style.cursor = 'cell';
+        insert.canvas.style.cursor = 'cell';
     }
 
     return <Container>

@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useBrush } from './hooks';
 import Icon from './icon';
+import { Brush } from '../core/brush';
 
 export function RedoUndo() {
 
-    const [brush] = useBrush();
+    const brush = useBrush() as Brush;
 
     useEffect(() => {
         if (!brush) return;

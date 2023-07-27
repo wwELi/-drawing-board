@@ -18,7 +18,7 @@ const BackgroundImage = styled.div`
  `;
 
 export function ToolBar(props) {
-    const [brush] = useBrush();
+    const brush = useBrush();
 
     function  formatColorToNumner(color: string): number[] {
         const reg = /^#(\w{2})(\w{2})(\w{2})/;
@@ -39,7 +39,7 @@ export function ToolBar(props) {
         const color = colors.reduce((prev, curr) => {
             return prev + (curr.length > 1 ? curr : `0${curr}`);
         }, '#');
-        brush.setBrushColor(color);
+        brush?.setBrushColor(color);
     }
 
     return <BackgroundImage onClick={onToolBarClick}/>

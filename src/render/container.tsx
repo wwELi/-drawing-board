@@ -1,5 +1,5 @@
 import { ToolBar } from './toolbar';
-import { BrushCanvas } from './brush';
+import { BrushCanvas } from './brush/index';
 import { DownloadFile } from './download';
 import { BrushToogle } from './brush-toogle';
 
@@ -34,7 +34,7 @@ function Container() {
         <RightTopTools>
             <RedoUndo></RedoUndo>
             <InsertShape></InsertShape>
-            <BrushToogle></BrushToogle>
+            {/* <BrushToogle></BrushToogle> */}
             <DownloadFile></DownloadFile>
         </RightTopTools>
         <BrushCanvas></BrushCanvas>

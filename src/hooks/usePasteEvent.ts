@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 
 let coordinate:[number, number] = [10, 20];
 
-export function usePasteEvent(callback: (result: { type: 'text' | 'image', data: string | HTMLImageElement, coordinate: [number, number] }) => void) {
+export function usePasteEvent(callback: (result: { type: 'text' | 'image', data: string | HTMLImageElement, coordinate: [number, number] }) => void, deps) {
     const onPaste = (evt) => {
         if (!evt.clipboardData) {
             return;
@@ -37,9 +37,9 @@ export function usePasteEvent(callback: (result: { type: 'text' | 'image', data:
         drop.click(([x, y]) => {
             coordinate = [x, y];
         })
-        window.addEventListener('paste', (evt) => onPaste(evt));
+        window.addEventListener('paste', onPaste);
         return () => {
             window.removeEventListener('paste', onPaste);
         }
-    }, []);
+    }, deps || []);
 }

@@ -6,11 +6,12 @@ import { List } from '../utils/list';
 import { Shape } from './shape';
 import cloneDeep from 'lodash/cloneDeep';
 import clone from 'lodash/clone';
+import { Dot } from './dot';
 
 export class Brush {
 
     private stack = new Stack<Shape[]>();
-    private ctx: CanvasRenderingContext2D;
+    public ctx: CanvasRenderingContext2D;
     private shapes: Shape[] = [];
     public isStroke = false;
 
@@ -26,6 +27,17 @@ export class Brush {
 
     getSelectShapes(x: number, y: number) {
         return this.shapes.filter(shape => shape.isInShape(x, y, this.ctx));
+    }
+
+    getSelectDots(x: number, y: number): Dot[] {
+        const dots: Dot[] = [];
+
+        this.shapes.forEach((shape) => {
+            if (Array.isArray(shape.dots)) {
+                dots.push(...shape.dots.filter((dot) => dot.isInPath(x, y)));
+            }
+        })
+        return dots;
     }
 
     getContainerCanvas():HTMLCanvasElement {

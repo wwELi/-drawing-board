@@ -1,4 +1,5 @@
 import { drawSelectRect } from "../utils/drowSelectRect";
+import { Dot } from "./dot";
 import { Shape, tag } from "./shape";
 
 @tag('Rectangle')
@@ -8,6 +9,7 @@ export class Rectangle implements Shape {
     width = 200;
     height = 200;
     text = '';
+    dots: Dot[] = [];
 
     constructor(public x:number, public y:number) {
 
@@ -24,17 +26,17 @@ export class Rectangle implements Shape {
         const { x, y, width, height } = this;
 
         const points = [
-            { x, y },
-            { x: x + width / 2, y },
-            { x: x + width, y },
-            { x: x + width, y: y + height / 2 },
-            { x: x + width, y: y + height },
-            { x: x + width / 2, y: y + height },
-            { x, y: y + height },
-            { x, y: y + height / 2 }
+            { x, y, cursor: 'nw-resize', cb: (offsetX, offsetY) => this.updateData({ x: this.x + offsetX, y: this.y + offsetY, width: this.width - offsetX, height: this.height - offsetY  }) },
+            { x: x + width / 2, y, cursor: 'n-resize', cb: (offsetX, offsetY) => this.updateData({ height: this.height - offsetY, y: this.y + offsetY }) },
+            { x: x + width, y, cursor: 'ne-resize', cb: (offsetX, offsetY) => this.updateData({ width: offsetX + this.width, y: this.y + offsetY, height: this.height - offsetY })},
+            { x: x + width, y: y + height / 2, cursor: 'e-resize', cb: (offsetX, offsetY) => this.updateData({ width: this.width + offsetX }) },
+            { x: x + width, y: y + height, cursor: 'se-resize', cb: (offsetX, offsetY) => this.updateData({ width: this.width + offsetX, height: this.height + offsetY }) },
+            { x: x + width / 2, y: y + height, cursor: 's-resize', cb: (offsetX, offsetY) => this.updateData({ height: this.height + offsetY }) },
+            { x, y: y + height, cursor: 'sw-resize', cb: (offsetX, offsetY) => this.updateData({ x: this.x + offsetX, width: this.width - offsetX, height: this.height + offsetY  }) },
+            { x, y: y + height / 2 ,cursor: 'w-resize', cb: (offsetX, offsetY) => this.updateData({ x: this.x + offsetX, width: this.width - offsetX })}
         ]
 
-        drawSelectRect(points, ctx);
+        this.dots = points.map(({ x, y, cb, cursor }) => new Dot(ctx, this, x, y, cb, cursor));
     }
 
     updateData({ x = this.x, y = this.y, color = this.color, width = this.width, height = this.height }) {
@@ -53,6 +55,7 @@ export class Rectangle implements Shape {
     fillText(text: string, ctx: CanvasRenderingContext2D): void {
         this.text = text;
         ctx.font = "bold 24px serif";
-        ctx.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2)
+        ctx.textAlign = "center";
+        ctx.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
     }
 }

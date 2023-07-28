@@ -12,16 +12,17 @@ const WInput = styled.input({
     }
 })
 
-export function Input({ shape, ctx }) {
+export function Input({ shape, ctx, brush }) {
     const ref = useRef<HTMLInputElement>(null);
     const [text, setText] = useState(shape.text);
 
     useEffect(() => {
+        shape.text = '';
+        brush.redraw();
         ref.current?.focus();
     }, [])
 
     function onTextChange(evt) {
-        console.log(evt.target.value);
         setText(evt.target.value)
     }
 

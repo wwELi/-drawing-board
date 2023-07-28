@@ -1,7 +1,10 @@
+import { Dot } from "./dot";
+
 export interface Shape{
     x: number;
     y: number;
     text?: string;
+    dots?: Dot[];
     draw(ctx: CanvasRenderingContext2D): void;
     select(ctx: CanvasRenderingContext2D): void;
     clear(ctx: CanvasRenderingContext2D): void;

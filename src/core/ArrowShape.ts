@@ -1,5 +1,6 @@
 import { isPointInPathByOffCanvas } from "../utils";
 import { drawSelectRect } from "../utils/drowSelectRect";
+import { Dot } from "./dot";
 import { Shape, tag } from "./shape";
 
 @tag('ArrowShape')
@@ -9,7 +10,8 @@ export class ArrowShape implements Shape {
     arrowWidth = 4;
     arrowHeight = 10;
     ctx: CanvasRenderingContext2D | undefined;
-    color = '#333'
+    color = '#333';
+    dots: Dot[] = [];
     
     constructor(public x: number, public y:number) {}
 
@@ -50,11 +52,20 @@ export class ArrowShape implements Shape {
     }
 
     select(ctx: CanvasRenderingContext2D): void {
+        const updateTop = (offsetX, offsetY) => {
+            this.updateData({ y: this.y + offsetY, height: this.height - offsetY })
+        }
+
+        const updateBottom = (offsetX, offsetY) => {
+            this.updateData({ height: this.height + offsetY })
+        }
+
         const points = [
-            { x: this.x + this.width / 2, y: this.y },
-            { x: this.x + this.width / 2, y: this.y + this.height + this.arrowHeight }
+            { x: this.x + this.width / 2, y: this.y, cursor: 'row-resize', cb: updateTop },
+            { x: this.x + this.width / 2, y: this.y + this.height + this.arrowHeight, cursor: 'row-resize',  cb: updateBottom }
         ];
-        drawSelectRect(points, ctx);
+
+        this.dots = points.map(({ x, y, cb, cursor }) => new Dot(ctx, this, x, y, cb, cursor));
     }
 
 }

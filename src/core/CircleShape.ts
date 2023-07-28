@@ -5,8 +5,9 @@ import { Shape, tag } from "./shape";
 @tag('CircleShape')
 export class CircleShape implements Shape {
 
-    radius = 40;
+    radius = 80;
     color = '#1990ff';
+    text = '';
 
     constructor(public x: number, public y: number  ) {}
 
@@ -40,6 +41,13 @@ export class CircleShape implements Shape {
         path.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         path.closePath();
         return isPointInPathByOffCanvas(path, x, y);
+    }
+    fillText(text: string, ctx: CanvasRenderingContext2D): void {
+        this.text = text;
+        ctx.font = "bold 24px serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(this.text, this.x, this.y);
     }
     updateData?(data: any): void {
         // throw new Error("Method not implemented.");

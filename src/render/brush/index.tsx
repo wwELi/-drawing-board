@@ -46,8 +46,13 @@ export function BrushCanvas() {
         const canvas = canvasRef.current as unknown as HTMLCanvasElement;
         const parent = canvas.offsetParent as HTMLElement;
 
-        canvas.width = parent.offsetWidth;
-        canvas.height = parent.offsetHeight;
+        const dpr = window.devicePixelRatio || 1;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        canvas.style.width = parent.offsetWidth + 'px';
+        canvas.style.height = parent.offsetHeight + 'px';
+        canvas.width = parent.offsetWidth * dpr;
+        canvas.height = parent.offsetHeight * dpr;
+        ctx.scale(dpr, dpr);
 
         renderCanvasBackGround(canvas);
     }, [brush])

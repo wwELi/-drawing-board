@@ -27,3 +27,10 @@ export function getOffsetPosition(el: HTMLElement, left = 0, top = 0): [number, 
 export function isFunction(fn: any): boolean {
     return typeof fn === 'function';
 }
+
+export function isPointInPathByOffCanvas(path: Path2D, x: number, y: number): boolean {
+    const dpr = window.devicePixelRatio || 1;
+    const offCanvas = new OffscreenCanvas(window.innerWidth * dpr, window.innerHeight * dpr);
+    const offCtx = offCanvas.getContext('2d');
+    return !!offCtx?.isPointInPath(path, x, y);
+}

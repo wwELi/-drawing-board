@@ -83,7 +83,7 @@ export function drawSelectedShape(brush: Brush | null) {
             const {x, y} = evt;
             brush.redraw();
             const shapes = brush.getSelectShapes(x, y);
-            console.log('===>', shapes)
+            console.log('===>', shapes, [x,y])
             shapes.forEach((shape) => shape.select(ctx));
         })
 

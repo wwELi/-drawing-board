@@ -1,3 +1,4 @@
+import { isPointInPathByOffCanvas } from "../utils";
 import { drawSelectRect } from "../utils/drowSelectRect";
 import { Shape, tag } from "./shape";
 
@@ -12,36 +13,35 @@ export class ArrowShape implements Shape {
     
     constructor(public x: number, public y:number) {}
 
-    drawPath() {
-        const {ctx, x, y, width, height, arrowWidth, arrowHeight} = this;
-        if (!ctx) return;
-        ctx.beginPath();
-        ctx.moveTo(x, y); 
-        ctx.lineTo(x + width, y);
-        ctx.lineTo(x + width, y + height);
-        ctx.lineTo(x + width + arrowWidth, y + height);
-        ctx.lineTo(x + width / 2, y + height + arrowHeight);
-        ctx.lineTo(x - arrowWidth, y + height);
-        ctx.lineTo(x, y + height)
-        ctx.closePath();
+    getDrawPath(): Path2D {
+        const {x, y, width, height, arrowWidth, arrowHeight} = this;
+        const path = new Path2D();
+
+        path.moveTo(x, y); 
+        path.lineTo(x + width, y);
+        path.lineTo(x + width, y + height);
+        path.lineTo(x + width + arrowWidth, y + height);
+        path.lineTo(x + width / 2, y + height + arrowHeight);
+        path.lineTo(x - arrowWidth, y + height);
+        path.lineTo(x, y + height)
+        path.closePath();
+
+        return path;
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
         this.ctx = ctx;
         this.ctx.save();
         ctx.fillStyle = this.color;
-        this.drawPath();
-        ctx.fill();
+        const path = this.getDrawPath();
+        ctx.fill(path);
         this.ctx.restore();
     }
     clear(ctx: CanvasRenderingContext2D): void {
         throw new Error("Method not implemented.");
     }
     isInShape(x: number, y: number): boolean {
-        if (!this.ctx) return false;
-        // TODO isPointInPath 判断无法生效
-        // this.ctx.isPointInPath(x, y)
-        return (this.x < x && x < this.x + this.width) && (this.y < y && y < this.y + this.height)
+        return isPointInPathByOffCanvas(this.getDrawPath(), x, y);
     }
 
 

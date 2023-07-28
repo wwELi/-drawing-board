@@ -1,3 +1,4 @@
+import { isPointInPathByOffCanvas } from "../utils";
 import { drawSelectRect } from "../utils/drowSelectRect";
 import { Shape, tag } from "./shape";
 
@@ -38,7 +39,7 @@ export class CircleShape implements Shape {
         const path = new Path2D();
         path.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         path.closePath();
-        return ctx.isPointInPath(path, x, y);
+        return isPointInPathByOffCanvas(path, x, y);
     }
     updateData?(data: any): void {
         // throw new Error("Method not implemented.");

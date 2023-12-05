@@ -14,6 +14,7 @@ export class Brush {
     public ctx: CanvasRenderingContext2D;
     private shapes: Shape[] = [];
     public isStroke = false;
+    maxIndex = 1;
 
     constructor(
         private canvas: HTMLCanvasElement
@@ -27,6 +28,11 @@ export class Brush {
 
     getSelectShapes(x: number, y: number) {
         return this.shapes.filter(shape => shape.isInShape(x, y, this.ctx));
+    }
+
+    shapePinToTop(shape: Shape) {
+        this.maxIndex++;
+        shape.zIndex = this.maxIndex;
     }
 
     getSelectDots(x: number, y: number): Dot[] {
@@ -50,7 +56,8 @@ export class Brush {
 
     redraw() {
         this.clearCanvas();
-        this.shapes.forEach((shape) => {
+        const sortShapes = this.shapes.sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
+        sortShapes.forEach((shape) => {
             this.ctx.save();
             shape.draw(this.ctx);
             if (shape.text && shape.fillText) {

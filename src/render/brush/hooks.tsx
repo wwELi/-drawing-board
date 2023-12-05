@@ -81,6 +81,7 @@ export function moveSelectedShape(brush: Brush | null) {
                 selectShape.y = selectShape.y + y - lastY;
             }
 
+            brush.shapePinToTop(selectShape);
             brush.redraw();
 
             lastX = x;

@@ -5,6 +5,7 @@ export interface Shape{
     y: number;
     text?: string;
     dots?: Dot[];
+    zIndex?: number;
     draw(ctx: CanvasRenderingContext2D): void;
     select(ctx: CanvasRenderingContext2D): void;
     clear(ctx: CanvasRenderingContext2D): void;
